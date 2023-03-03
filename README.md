@@ -6,4 +6,6 @@ _A simple webscraper that downloads twitch emote packs via twitchemotes.com._
 
 ```sh
 $ npx twitch-emotes-dl https://www.twitch.tv/imkrisyim
+
+$ open ./twitch-emotes-dl/imkrisyim
 ```
