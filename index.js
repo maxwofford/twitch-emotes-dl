@@ -51,7 +51,7 @@ function requestContent(id) {
 
 function downloadEmoteImg({ username, url, emoteName }) {
   return https.get(url, (res) => {
-    let savepath = path.join(__dirname, "twitch-emotes-dl", username, emoteName)
+    let savepath = path.join("twitch-emotes-dl", username, emoteName)
     const ext = res.headers["content-type"].split("/").pop()
     savepath += `.${ext}`
     if (fs.existsSync(savepath)) {
@@ -78,7 +78,7 @@ function createDownloadFolder(username) {
   if (verbose) {
     console.log(`Creating folder ${username}...`)
   }
-  const dir = path.join(__dirname, "twitch-emotes-dl", username)
+  const dir = path.join("twitch-emotes-dl", username)
   if (!fs.existsSync(dir)) {
     fs.mkdirSync(dir, { recursive: true })
   }
