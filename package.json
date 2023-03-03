@@ -4,6 +4,10 @@
   "main": "index.js",
   "author": "max@maxwofford.com",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/maxwofford/twitch-emotes-dl.git"
+  },
   "bin": {
     "twitch-emotes-dl": "./index.js"
   },
