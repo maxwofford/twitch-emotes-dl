@@ -1,4 +1,4 @@
-#!/usr/bin/node
+#!/usr/bin/env node
 
 const HTMLParser = require("node-html-parser")
 const fetch = require("node-fetch")
