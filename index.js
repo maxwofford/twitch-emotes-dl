@@ -1,5 +1,5 @@
-const HTMLParser = require('node-html-parser')
-const fetch = require('node-fetch')
+const HTMLParser = require("node-html-parser")
+const fetch = require("node-fetch")
 const https = require("https")
 const fs = require("fs")
 const path = require("path")
@@ -9,21 +9,19 @@ let verbose = false
 
 async function run() {
   const args = process.argv.slice(2)
-  const help = args.indexOf('--help') >= 0 ||
-              args.indexOf('-h') >= 0
+  const help = args.indexOf("--help") >= 0 || args.indexOf("-h") >= 0
 
-  verbose = args.indexOf('--verbose') >= 0 ||
-            args.indexOf('-v') >= 0
+  verbose = args.indexOf("--verbose") >= 0 || args.indexOf("-v") >= 0
 
   if (help) {
-    console.log('Usage: node index.js [options]')
-    console.log('Options:')
-    console.log('  --help, -h     Print this message')
+    console.log("Usage: node index.js [options]")
+    console.log("Options:")
+    console.log("  --help, -h     Print this message")
     return
   }
 
-  const twitchUrl = args.find(arg => {
-    return arg.indexOf('www.twitch.tv') >= 0
+  const twitchUrl = args.find((arg) => {
+    return arg.indexOf("www.twitch.tv") >= 0
   })
   downloadEmotes(twitchUrl)
 }
@@ -33,10 +31,10 @@ async function getUserIDFrom(username) {
   return new Promise((resolve, reject) => {
     exec(cmd, (_code, stdout, _stderr) => {
       if (stdout) {
-        const userID = new URL(stdout).pathname.split('/').pop()
+        const userID = new URL(stdout).pathname.split("/").pop()
         resolve(userID)
       } else {
-        console.error('Error: Could not get user ID')
+        console.error("Error: Could not get user ID")
         reject("Could not get user ID")
       }
     })
@@ -44,13 +42,15 @@ async function getUserIDFrom(username) {
 }
 
 function requestContent(id) {
-  return fetch(`https://twitchemotes.com/channels/${id}`).then(res => res.text())
+  return fetch(`https://twitchemotes.com/channels/${id}`).then((res) =>
+    res.text()
+  )
 }
 
-function downloadEmoteImg({username, url, name}) {
+function downloadEmoteImg({ username, url, name }) {
   return https.get(url, (res) => {
     let savepath = path.join(username, name)
-    const ext = res.headers['content-type'].split('/').pop()
+    const ext = res.headers["content-type"].split("/").pop()
     savepath += `.${ext}`
     if (fs.existsSync(savepath)) {
       if (verbose) {
@@ -60,9 +60,9 @@ function downloadEmoteImg({username, url, name}) {
       return
     }
     const writeStream = fs.createWriteStream(savepath)
-  
+
     res.pipe(writeStream)
-  
+
     writeStream.on("finish", () => {
       writeStream.close()
       if (verbose) {
@@ -83,7 +83,7 @@ function createDownloadFolder(username) {
 }
 
 function getUsernameFrom(twitchUrl) {
-  const username = new URL(twitchUrl).pathname.split('/')[1]
+  const username = new URL(twitchUrl).pathname.split("/")[1]
   if (verbose) {
     console.log("Username is " + username)
   }
@@ -95,19 +95,19 @@ async function downloadEmotes(twitchUrl) {
   const userID = await getUserIDFrom(username)
   const html = await requestContent(userID)
   const parsedHtml = HTMLParser.parse(html)
-  const emoteCards = parsedHtml.querySelectorAll('.card-body>.row center')
-  console.log({username, userID, html, parsedHtml})
+  const emoteCards = parsedHtml.querySelectorAll(".card-body>.row center")
+  console.log({ username, userID, html, parsedHtml })
   createDownloadFolder(username)
   const jobs = emoteCards.map((card) => {
-    let url = card.querySelector('img').getAttribute('src')
-    url = url.replace('2.0', '3.0')
+    let url = card.querySelector("img").getAttribute("src")
+    url = url.replace("2.0", "3.0")
     const name = card.innerText.trim()
 
-    return downloadEmoteImg({username, url, name})
+    return downloadEmoteImg({ username, url, name })
   })
   console.log(`Downloading ${jobs.length} emotes...`)
 
   await Promise.all(jobs)
 }
 
-run();
+run()
