@@ -16,9 +16,11 @@ async function run() {
   verbose = args.indexOf("--verbose") >= 0 || args.indexOf("-v") >= 0
 
   if (help) {
-    console.log("Usage: node index.js [options]")
+    console.log("Usage: twitch-emotes-downloader [options] [url]")
     console.log("Options:")
     console.log("  --help, -h     Print this message")
+    console.log("  --verbose, -v  Print verbose progress updates")
+    console.log('Example: twitch-emotes-downloader "https://www.twitch.tv/monstercat"')
     return
   }
 
