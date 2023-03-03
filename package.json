@@ -1,9 +1,12 @@
 {
   "name": "twitch-emotes-dl",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "main": "index.js",
   "author": "max@maxwofford.com",
   "license": "MIT",
+  "bin": {
+    "twitch-emotes-dl": "./index.js"
+  },
   "scripts": {
     "fmt": "yarn prettier --write ."
   },
