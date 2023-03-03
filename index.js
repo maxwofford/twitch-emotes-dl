@@ -47,14 +47,14 @@ function requestContent(id) {
   )
 }
 
-function downloadEmoteImg({ username, url, name }) {
+function downloadEmoteImg({ username, url, emoteName }) {
   return https.get(url, (res) => {
-    let savepath = path.join(username, name)
+    let savepath = path.join(__dirname, "twitch-emotes-dl", username, emoteName)
     const ext = res.headers["content-type"].split("/").pop()
     savepath += `.${ext}`
     if (fs.existsSync(savepath)) {
       if (verbose) {
-        console.log(`    ':${name}:' Already exists!`)
+        console.log(`    ':${emoteName}:' Already exists!`)
       }
       res.destroy()
       return
@@ -66,7 +66,7 @@ function downloadEmoteImg({ username, url, name }) {
     writeStream.on("finish", () => {
       writeStream.close()
       if (verbose) {
-        console.log(`    ':${name}:' Downloaded!`)
+        console.log(`    ':${emoteName}:' Downloaded!`)
       }
     })
   })
@@ -76,9 +76,9 @@ function createDownloadFolder(username) {
   if (verbose) {
     console.log(`Creating folder ${username}...`)
   }
-  const dir = path.join(__dirname, username)
+  const dir = path.join(__dirname, "twitch-emotes-dl", username)
   if (!fs.existsSync(dir)) {
-    fs.mkdirSync(dir)
+    fs.mkdirSync(dir, { recursive: true })
   }
 }
 
@@ -96,14 +96,15 @@ async function downloadEmotes(twitchUrl) {
   const html = await requestContent(userID)
   const parsedHtml = HTMLParser.parse(html)
   const emoteCards = parsedHtml.querySelectorAll(".card-body>.row center")
-  console.log({ username, userID, html, parsedHtml })
   createDownloadFolder(username)
   const jobs = emoteCards.map((card) => {
-    let url = card.querySelector("img").getAttribute("src")
-    url = url.replace("2.0", "3.0")
-    const name = card.innerText.trim()
+    const url = card
+      .querySelector("img")
+      .getAttribute("src")
+      .replace("2.0", "3.0")
+    const emoteName = card.innerText.trim()
 
-    return downloadEmoteImg({ username, url, name })
+    return downloadEmoteImg({ username, url, emoteName })
   })
   console.log(`Downloading ${jobs.length} emotes...`)
 
