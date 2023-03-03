@@ -4,6 +4,9 @@
   "main": "index.js",
   "author": "max@maxwofford.com",
   "license": "MIT",
+  "scripts": {
+    "fmt": "yarn prettier --write ."
+  },
   "dependencies": {
     "node-fetch": "2",
     "node-html-parser": "^6.1.5",
