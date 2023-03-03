@@ -1,3 +1,5 @@
+#!/usr/bin/node
+
 const HTMLParser = require("node-html-parser")
 const fetch = require("node-fetch")
 const https = require("https")
